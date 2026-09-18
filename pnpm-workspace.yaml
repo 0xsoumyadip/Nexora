@@ -3,6 +3,7 @@ packages:
   - "packages/*"
 allowBuilds:
   '@prisma/engines': false
+  bcrypt: false
   esbuild: false
   msgpackr-extract: false
   prisma: false
