@@ -19,10 +19,10 @@ const seed: Array<[string, DocumentType, string, boolean, number, number, boolea
   ["Old architecture notes", "note", "Alex Morgan", false, 480, 0, true], ["Previous sprint planning", "meeting", "Maya Chen", false, 720, 2, true],
 ];
 export const documents: DocumentSummary[] = seed.map(([title, type, owner, starred, hours, collaborators, trashed], index) => ({
-  id: `doc_${index + 1}`, title, type, owner, ownerId: owner === "Alex Morgan" ? CURRENT_USER_ID : people[index % people.length].id,
+  id: `doc_${index + 1}`, title, type, owner, ownerId: owner === "Alex Morgan" ? CURRENT_USER_ID : people[index % people.length]?.id ?? CURRENT_USER_ID,
   collaborators: people.slice(0, collaborators), isStarred: starred, visibility: collaborators ? "shared" : "private", updatedAt: age(hours), createdAt: age(hours + 200),
   lastOpenedAt: index < 7 ? age(hours / 2 + 1) : null, trashedAt: trashed ? age(hours / 3) : null,
-  excerpt: ["Clear decisions, owners, and next steps for the team.", "A working document for thoughtful collaboration.", "Notes, context, and the details worth keeping."][index % 3],
+  excerpt: ["Clear decisions, owners, and next steps for the team.", "A working document for thoughtful collaboration.", "Notes, context, and the details worth keeping."][index % 3] ?? "A working document for thoughtful collaboration.",
 }));
 export async function listDocuments(scope: Scope = "all") { await new Promise((r) => setTimeout(r, 120)); return documents.filter((doc) => {
   if (scope === "trash") return Boolean(doc.trashedAt);

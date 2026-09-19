@@ -6,8 +6,7 @@
         "name": "next"
       }
     ],
-    "strictNullChecks": true
-    ,"baseUrl": ".",
+    "strictNullChecks": true,
     "paths": { "@/*": ["./*"] }
   },
   "include": [
