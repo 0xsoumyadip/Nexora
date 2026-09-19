@@ -1,5 +1,5 @@
 {
-  "name": "auth",
+  "name": "@nexora/auth",
   "version": "1.0.0",
   "description": "",
   "main": "./dist/index.js",
@@ -10,14 +10,14 @@
   },
   "exports": {
     "./client": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "default": "./dist/client.js"
     },
     "./auth": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/auth.d.ts",
+      "import": "./dist/auth.js",
+      "default": "./dist/auth.js"
     }
   },
   "dependencies": {

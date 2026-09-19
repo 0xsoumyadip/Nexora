@@ -1,0 +1,1 @@
+import { Editor } from "@/features/editor"; import { getDocument } from "@/lib/data/documents"; export default async function Page({params}:{params:Promise<{documentId:string}>}){const {documentId}=await params;return <Editor document={await getDocument(documentId)}/>}
