@@ -2,7 +2,7 @@
   "name": "@nexora/database",
   "version": "0.0.0",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "prisma generate && tsc -p tsconfig.json",
     "db:migrate": "prisma migrate dev",
@@ -12,7 +12,7 @@
   },
   "exports": {
     ".": {
-      "types": "./dist/index.d.js",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     }
