@@ -1,1 +1,2 @@
-import { DocumentBrowser } from "@/features/browser"; import { listDocuments } from "@/lib/data/documents"; export default async function Page(){return <DocumentBrowser initial={await listDocuments("trash")} scope="trash"/>}
+import { DocumentBrowser } from "@/features/browser";
+export default function Page() { return <DocumentBrowser scope="trash" />; }

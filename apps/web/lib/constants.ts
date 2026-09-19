@@ -1,5 +1,4 @@
-export const APP_NAME = "Docly";
-export const CURRENT_USER_ID = "user_alex";
+export const APP_NAME = "Nexora";
 export const routes = {
   home: "/",
   login: "/login",

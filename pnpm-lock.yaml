@@ -20,33 +20,18 @@ importers:
 
   apps/web:
     dependencies:
-      '@hookform/resolvers':
-        specifier: ^5.9.1
-        version: 5.9.1(@standard-schema/spec@1.1.0)(ajv@8.20.0)(effect@3.20.0)(react-hook-form@7.88.0(react@19.2.8))(valibot@1.4.2(typescript@7.0.2))(zod@4.6.5)
-      '@nexora/ui':
-        specifier: workspace:*
-        version: link:../../packages/ui
       lucide-react:
         specifier: ^1.47.0
         version: 1.47.0(react@19.2.8)
       next:
         specifier: 16.3.4
         version: 16.3.4(@babel/core@8.0.1)(@types/node@26.4.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      next-themes:
-        specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       react:
         specifier: 19.2.8
         version: 19.2.8
       react-dom:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
-      react-hook-form:
-        specifier: ^7.88.0
-        version: 7.88.0(react@19.2.8)
-      zod:
-        specifier: ^4.6.5
-        version: 4.6.5
     devDependencies:
       '@nexora/eslint-config':
         specifier: workspace:*
