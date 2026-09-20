@@ -199,6 +199,16 @@ importers:
         specifier: 7.0.2
         version: 7.0.2
 
+  packages/validation:
+    dependencies:
+      zod:
+        specifier: ^4.6.5
+        version: 4.6.5
+    devDependencies:
+      '@nexora/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+
 packages:
 
   '@babel/code-frame@7.29.7':
