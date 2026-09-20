@@ -24,8 +24,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions      Session[]
-  accounts      Account[]
+  sessions Session[]
+  accounts Account[]
+  authoredDocuments  Document[] @relation("DocumentAuthor")
+  editedDocuments    Document[] @relation("DocumentLastEditor")
 }
 
 model Session {
@@ -37,7 +39,7 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
   @@index([userId])
@@ -49,7 +51,7 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -76,3 +78,17 @@ model Verification {
   @@map("verification")
 }
 
+model Document {
+  id        String   @id @default(uuid())
+
+  name      String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId       String
+  lastEditedById String?
+
+  author       User  @relation("DocumentAuthor", fields: [authorId], references: [id])
+  lastEditedBy User? @relation("DocumentLastEditor", fields: [lastEditedById], references: [id])
+}
