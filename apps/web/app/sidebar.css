@@ -1,0 +1,12 @@
+.sidebar-top{display:flex;align-items:center;justify-content:space-between}.sidebar-close,.sidebar-toggle,.sidebar-backdrop{display:none}.header-workspace{display:flex;align-items:center;gap:8px}
+
+@media(max-width:800px){
+  .sidebar-toggle{display:grid}
+  .sidebar-close{display:grid}
+  .sidebar-backdrop{display:block;position:fixed;inset:0;z-index:19;border:0;background:rgba(9,9,11,.42);opacity:0;pointer-events:none;transition:opacity .2s ease}
+  .sidebar-backdrop.is-open{opacity:1;pointer-events:auto}
+  .sidebar{display:flex;position:fixed;inset:0 auto 0 0;z-index:20;width:min(84vw,320px);box-shadow:12px 0 32px rgba(0,0,0,.18);transform:translateX(-100%);transition:transform .2s ease}
+  .sidebar.is-open{transform:translateX(0)}
+}
+
+@media(prefers-reduced-motion:reduce){.sidebar,.sidebar-backdrop{transition:none}}
