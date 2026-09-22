@@ -8,6 +8,14 @@ export const auth = betterAuth({
     database: prismaAdapter(prisma, {
         provider: "postgresql"
     }),
+    user: {
+        additionalFields: {
+            userName: {
+                type: "string",
+                required: true
+            }
+        }
+    },
     emailAndPassword: {
         enabled: true,
         autoSignIn: false,
@@ -25,3 +33,5 @@ export const auth = betterAuth({
         nextCookies()
     ]
 })
+
+export type Auth = typeof auth;

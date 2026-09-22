@@ -26,18 +26,16 @@ export const signIn = async (req: Request, res: Response) => {
         })
     }
 
-    const data = await auth.api.signInEmail({
+    const { headers } = await auth.api.signInEmail({
+      returnHeaders: true,
         body: {
             email,
             password
         }
     });
 
-    if(!data) {
-        return res.status(409).json({
-            status: false,
-            message: "Sign in failed."
-        })
+    for(const cookie of headers.getSetCookie()){
+      res.append("Set-Cookie", cookie)
     }
 
     return res.status(201).json({
