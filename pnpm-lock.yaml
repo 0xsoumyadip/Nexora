@@ -36,6 +36,9 @@ importers:
       '@nexora/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@nexora/validation':
+        specifier: workspace:*
+        version: link:../../packages/validation
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6

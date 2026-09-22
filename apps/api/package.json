@@ -27,6 +27,7 @@
   "type": "module",
   "devDependencies": {
     "@nexora/auth": "workspace:*",
+    "@nexora/validation": "workspace:*",
     "@nexora/database": "workspace:*",
     "@nexora/typescript-config": "workspace:*",
     "@types/express": "^5.0.6",

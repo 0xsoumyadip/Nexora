@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const userSchema = z.object({
-  FullName: z
+  name: z
     .string()
     .trim()
     .min(2, "Name must be atleast 2 characteres")
@@ -20,8 +20,7 @@ export const userSchema = z.object({
 
   password: z
     .string()
-    .min(6, "Password must be atleast 6 characters.")
-    .optional(),
+    .min(6, "Password must be atleast 6 characters."),
   image: z.string().optional(),
 });
 
