@@ -2,7 +2,9 @@
     "extends": "@nexora/typescript-config/base.json",
     "compilerOptions": {
         "outDir": "./dist",
-        "rootDir": "./src"
+        "rootDir": "./src",
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true
     },
     "include": ["src/**/*.ts"]
 }
