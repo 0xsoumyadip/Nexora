@@ -18,6 +18,7 @@
     }
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1"
   },
@@ -27,9 +28,10 @@
   "type": "module",
   "devDependencies": {
     "@nexora/auth": "workspace:*",
-    "@nexora/validation": "workspace:*",
     "@nexora/database": "workspace:*",
     "@nexora/typescript-config": "workspace:*",
+    "@nexora/validation": "workspace:*",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "26.4.1",
     "tsx": "^4.23.13",

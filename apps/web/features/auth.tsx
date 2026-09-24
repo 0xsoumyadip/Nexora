@@ -2,9 +2,16 @@ import Link from "next/link";
 import { Eye, EyeOff } from "lucide-react";
 import { Logo } from "@/features/marketing";
 import { routes } from "@/lib/constants";
+import { useState } from "react";
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const login = mode === "login";
+
+  const [fullName, setFullName] = useState("");
+  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
   return (
     <div className="auth-page">
       <main className="auth-form-pane">
@@ -19,7 +26,13 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
           <div>
             {!login && (
               <div className="form-group">
-                <label>Name</label>
+                <label>Full Name</label>
+                <input className="input" autoComplete="name" />
+              </div>
+            )}
+            {!login && (
+              <div className="form-group">
+                <label>User Name</label>
                 <input className="input" autoComplete="name" />
               </div>
             )}
