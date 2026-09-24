@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { userSchema } from "@nexora/validation";
+import { createUserSchema } from "@nexora/validation";
 import { auth } from "@nexora/auth/auth";
 import prisma from "@nexora/database";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
-    const parsedData = userSchema.safeParse(req.body);
+    const parsedData = createUserSchema.safeParse(req.body);
     if (!parsedData.success) {
       return res.status(400).json({
         status: false,

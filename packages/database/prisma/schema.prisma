@@ -18,7 +18,6 @@ model User {
   userName      String  @unique
   email         String  @unique
   emailVerified Boolean @default(false)
-  password      String
   image         String?
 
   createdAt DateTime @default(now())

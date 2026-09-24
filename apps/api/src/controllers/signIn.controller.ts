@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
-import { userSchema } from "@nexora/validation";
+import { signInUserSchema } from "@nexora/validation";
 import prisma from "@nexora/database";
 import { auth } from "@nexora/auth/auth";
 
 export const signIn = async (req: Request, res: Response) => {
   try {
-    const parsedData = userSchema.safeParse(req.body);
+    const parsedData = signInUserSchema.safeParse(req.body);
     if (!parsedData.success) {
       return res.status(400).json({
         statsus: false,
         message: "Invalid input data while sign in.",
+        error: parsedData.error.flatten().fieldErrors
       });
     }
 
