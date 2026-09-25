@@ -15,12 +15,13 @@ export const verifySession = async (
       }
     }
 
-    const session = await auth.api.getSession();
+    const session = await auth.api.getSession({ headers });
     if (!session) {
       res.status(401).json({
         status: false,
         message: "Unauthorized",
       });
+      return;
     }
 
     req.auth = session;

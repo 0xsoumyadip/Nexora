@@ -1,25 +1,41 @@
 import { v2 as cloudinary } from "cloudinary";
+import dotenv from "dotenv";
+import { fileURLToPath } from "node:url";
+
+dotenv.config({ path: fileURLToPath(new URL("../../.env", import.meta.url)) });
+
+const { CLOUDINARY_API_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
+  process.env;
+
+if (!CLOUDINARY_API_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
+  throw new Error(
+    "Cloudinary configuration is incomplete. Set CLOUDINARY_API_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in apps/api/.env.",
+  );
+}
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_API_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET
+  cloud_name: CLOUDINARY_API_NAME,
+  api_key: CLOUDINARY_API_KEY,
+  api_secret: CLOUDINARY_API_SECRET,
 });
 
-export const uploadFile = async(localPath: string) => {
-    try {
-        if(!localPath) {
-            throw new Error("File path must be required.");
-        }
-
-        const response = await cloudinary.uploader.upload(localPath, {
-            resource_type: "auto"
-        });
-
-        console.log("File uploaded successfully.");
-        return response;
-    } catch (error) {
-        console.error("Cloudinary error: ", error);
-        throw error;
+export const uploadFile = (file: Buffer) =>
+  new Promise((resolve, reject) => {
+    if (!file.length) {
+      reject(new Error("File data is required."));
+      return;
     }
-}
+
+    const stream = cloudinary.uploader.upload_stream(
+      { resource_type: "auto" },
+      (error, result) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve(result);
+      },
+    );
+
+    stream.end(file);
+  });
