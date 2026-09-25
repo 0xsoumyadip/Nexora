@@ -11,6 +11,13 @@ export const uploadFile = async (req: Request, res: Response) => {
         }
 
         const result = await uploadToCloudinary(req.file.buffer);
+        if(!result){
+            return res.status(401).json({
+                status: false,
+                message: "Failed to upload file. Please try again."
+            })
+        }
+
         return res.status(201).json({
             status: true,
             message: "File uploaded successfully.",
@@ -20,7 +27,7 @@ export const uploadFile = async (req: Request, res: Response) => {
         console.error("File uploading error: ", error);
         return res.status(502).json({
             status: false,
-            message: "File upload failed.",
+            message: "Internal server error.",
         });
     }
 };

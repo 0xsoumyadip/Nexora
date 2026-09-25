@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@nexora/web",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -11,12 +11,15 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@tiptap/react": "^3.31.3",
+    "@tiptap/starter-kit": "^3.31.3",
     "lucide-react": "^1.47.0",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@nexora/editor": "workspace:*",
     "@nexora/eslint-config": "workspace:*",
     "@nexora/typescript-config": "workspace:*",
     "@types/node": "26.4.1",

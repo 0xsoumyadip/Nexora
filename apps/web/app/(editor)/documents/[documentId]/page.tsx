@@ -1,4 +1,4 @@
-import { Editor } from "@/features/editor";
+import { DocumentPage } from "@/features/document-editor";
 export default function Page() {
-  return <Editor />;
+  return <DocumentPage />;
 }
