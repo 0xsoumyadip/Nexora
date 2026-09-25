@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import cors from "cors";
 import { createServer } from "node:http";
+import { setUpWebSocket } from "@nexora/ws";
 import authRoute from "./routes/user.route.ts";
 import uploadRoute from "./routes/upload.route.ts";
 
@@ -15,6 +16,8 @@ app.use("/", authRoute);
 app.use("/", uploadRoute);
 
 const server = createServer(app);
+
+setUpWebSocket(server);
 
 server.listen(port, () => {
     console.log(`Server is listening at http://localhost:${port}`);

@@ -48,6 +48,9 @@ importers:
       '@nexora/validation':
         specifier: workspace:*
         version: link:../../packages/validation
+      '@nexora/ws':
+        specifier: workspace:*
+        version: link:../ws
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19

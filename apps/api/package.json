@@ -32,6 +32,7 @@
     "@nexora/auth": "workspace:*",
     "@nexora/database": "workspace:*",
     "@nexora/typescript-config": "workspace:*",
+    "@nexora/ws": "workspace:*",
     "@nexora/validation": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
