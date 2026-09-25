@@ -1,0 +1,32 @@
+{
+  "name": "@nexora/ws",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "dev": "pnpm run build && pnpm run dev"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "devDependencies": {
+    "@nexora/typescript-config": "workspace:*",
+    "@types/ws": "^8.18.1",
+    "typescript": "7.0.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}

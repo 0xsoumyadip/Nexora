@@ -7,8 +7,9 @@ import Collaboration from "@tiptap/extension-collaboration";
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import dotenv from "dotenv";
+import { fileURLToPath } from "node:url";
 
-dotenv.config({})
+dotenv.config({ path: fileURLToPath(new URL("../env", import.meta.url))})
 
 const initialContent = `
   <h1>Welcome to Nexora</h1>
