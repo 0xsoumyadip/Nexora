@@ -118,13 +118,25 @@ importers:
 
   apps/ws:
     dependencies:
+      '@y/websocket-server':
+        specifier: ^0.1.5
+        version: 0.1.5(@y/y@14.0.0-rc.7)
       ws:
         specifier: ^8.21.3
         version: 8.21.3
     devDependencies:
+      '@nexora/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
+      '@nexora/database':
+        specifier: workspace:*
+        version: link:../../packages/database
       '@nexora/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: 26.4.1
+        version: 26.4.1
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
@@ -1682,6 +1694,21 @@ packages:
   '@visx/vendor@4.0.0-alpha.0':
     resolution: {integrity: sha512-6I+MuqXBcv9jnlcVowHoHKSdk9gXTWkHLKyqBwRWg7LY6A3Ei8SHfubpqGV5rBUSppxMq2RszPJUS6w+H0YgmQ==}
 
+  '@y/protocols@1.0.6-rc.1':
+    resolution: {integrity: sha512-e/qs7hXcLk/SeNitxMXv2ymozyWFTULwbJEi7cAf/K/iXw9nGwGXHrR5TNluQ/bMwOX1cwuUT0hjEojkfH0gsA==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    peerDependencies:
+      '@y/y': '*'
+
+  '@y/websocket-server@0.1.5':
+    resolution: {integrity: sha512-ue1zENKxwj66AV8QoTwk0MPEH6veUhgvw+Gn84iX6Tco4lN9DHuF9k8oEKObJSPWoKBsOjeUk/ZYJcSK7iGc1w==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+    hasBin: true
+
+  '@y/y@14.0.0-rc.7':
+    resolution: {integrity: sha512-J2nZO3+fMnGpRgqVFnOUX+AgqbuRSmUROl+fuJSPJFfk0gR5/Tb6WRqJAzpYSMf37HM5NGpUMqgSXA8wN3VpyA==}
+    engines: {node: '>=22.0.0', npm: '>=8.0.0'}
+
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
     engines: {node: '>= 0.6'}
@@ -1703,6 +1730,9 @@ packages:
 
   append-field@1.0.0:
     resolution: {integrity: sha512-klpgFSWLW1ZEs8svjfb7g4qWY0YS5imI82dTg+QahUvJ8YqAY0P10Uk8tTyh9ZGuYEZEMaeJYCF5BFuX552hsw==}
+
+  async-limiter@1.0.1:
+    resolution: {integrity: sha512-csOlWGAcRFJaI6m+F2WKdnMKr4HhdhFVBk0H/QbJFMCr+uO2kwohwXQPxw/9OCxp05r5ghVBFSyioixx3gfkNQ==}
 
   aws-ssl-profiles@1.1.2:
     resolution: {integrity: sha512-NZKeq9AfyQvEeNlN0zSYAaWrmBffJh3IELMZfRpJVWgrpEbtEpnjvzqBPf+mxoI287JohRDoa+/nsfqqiZmF6g==}
@@ -2362,6 +2392,11 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
+  lib0@1.0.0-rc.32:
+    resolution: {integrity: sha512-AaFxUR1ta0Zf3LmryubLTfYWmZCDfPjy5kAkDjURszy1RYJ7Rtt07xums81FLfj9Oa/6XLx7dOypiWXcSWJWyQ==}
+    engines: {node: '>=22'}
+    hasBin: true
+
   linkifyjs@4.3.3:
     resolution: {integrity: sha512-P8aEP5U/D1/IlTY2OeYsErdwh9bGuLE30NcXtKEjgdHcahveQoQwM2yZNsioQHsWFz0P7KKudisbrzCgR0sDHg==}
 
@@ -2969,6 +3004,17 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
+  ws@6.2.6:
+    resolution: {integrity: sha512-XTrf1gv7kXoVf1hbC3PAyAiPgR8Wz1blcrYIjEsUmr08BLksT41R8KbjmS9408C2ERx7v1JDLD/BkpLEttjfKA==}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   ws@8.21.3:
     resolution: {integrity: sha512-201TZ/kPWxoPr/OKWjquZR1SWKXcvxdH+e1xrx89b3YbmzLMFCLfnaG1HFIgWzJOEWZ7MvpK++odZufgYR50Rw==}
     engines: {node: '>=10.0.0'}
@@ -3002,6 +3048,10 @@ packages:
 
   yjs@13.6.33:
     resolution: {integrity: sha512-q/UYvr1gOk4XII+Cu1CW2dINjYqJJFifTzogEaIARznrvX7uOlHsdTEXcnOBMuIsrCGEEKdNxi74kyMLZlKVfw==}
+    engines: {node: '>=16.0.0', npm: '>=8.0.0'}
+
+  yjs@14.0.0-16:
+    resolution: {integrity: sha512-n7jMrQz4pgU/NFnf4qY53K2adR/fu6ViQ79qVIw6Og+BtuDs1hx3DjOi3iREVnA6tsxQXXVG3gvG0I2kpmAwoQ==}
     engines: {node: '>=16.0.0', npm: '>=8.0.0'}
 
   yocto-queue@0.1.0:
@@ -4307,6 +4357,26 @@ snapshots:
       d3-time-format: 4.1.0
       internmap: 2.0.3
 
+  '@y/protocols@1.0.6-rc.1(@y/y@14.0.0-rc.7)':
+    dependencies:
+      '@y/y': 14.0.0-rc.7
+      lib0: 1.0.0-rc.32
+
+  '@y/websocket-server@0.1.5(@y/y@14.0.0-rc.7)':
+    dependencies:
+      '@y/protocols': 1.0.6-rc.1(@y/y@14.0.0-rc.7)
+      lib0: 0.2.117
+      ws: 6.2.6
+      yjs: 14.0.0-16
+    transitivePeerDependencies:
+      - '@y/y'
+      - bufferutil
+      - utf-8-validate
+
+  '@y/y@14.0.0-rc.7':
+    dependencies:
+      lib0: 1.0.0-rc.32
+
   accepts@2.0.0:
     dependencies:
       mime-types: 3.0.2
@@ -4333,6 +4403,8 @@ snapshots:
       require-from-string: 2.0.2
 
   append-field@1.0.0: {}
+
+  async-limiter@1.0.1: {}
 
   aws-ssl-profiles@1.1.2: {}
 
@@ -4980,6 +5052,8 @@ snapshots:
     dependencies:
       isomorphic.js: 0.2.5
 
+  lib0@1.0.0-rc.32: {}
+
   linkifyjs@4.3.3: {}
 
   locate-path@6.0.0:
@@ -5621,6 +5695,10 @@ snapshots:
 
   wrappy@1.0.2: {}
 
+  ws@6.2.6:
+    dependencies:
+      async-limiter: 1.0.1
+
   ws@8.21.3: {}
 
   xtend@4.0.2: {}
@@ -5639,6 +5717,10 @@ snapshots:
   yallist@3.1.1: {}
 
   yjs@13.6.33:
+    dependencies:
+      lib0: 0.2.117
+
+  yjs@14.0.0-16:
     dependencies:
       lib0: 0.2.117
 

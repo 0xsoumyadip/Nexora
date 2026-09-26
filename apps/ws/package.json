@@ -8,7 +8,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "start": "node ./dist/index.js",
-    "dev": "pnpm run build && pnpm run dev"
+    "dev": "pnpm run build && pnpm run start"
   },
   "exports": {
     ".": {
@@ -19,6 +19,9 @@
   },
   "devDependencies": {
     "@nexora/typescript-config": "workspace:*",
+    "@nexora/database": "workspace:*",
+    "@nexora/auth": "workspace:*",
+    "@types/node": "26.4.1",
     "@types/ws": "^8.18.1",
     "typescript": "7.0.2"
   },
@@ -27,6 +30,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@y/websocket-server": "^0.1.5",
     "ws": "^8.21.3"
   }
 }
