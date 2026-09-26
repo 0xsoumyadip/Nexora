@@ -86,6 +86,7 @@ model Document {
   updatedAt DateTime @updatedAt
 
   authorId       String
+  starred        Boolean    @default(false)
   lastEditedById String?
 
   author       User  @relation("DocumentAuthor", fields: [authorId], references: [id])
