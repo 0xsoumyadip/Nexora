@@ -26,7 +26,15 @@ const items = [
   [Share2, "Shared with me", "/shared"],
 ] as const;
 
-export function AppShell({ children }: { children: ReactNode }) {
+type AppShellProps = {
+  children: ReactNode;
+  user: {
+    name: string;
+    email: string;
+  }
+}
+
+export function AppShell({ children, user }: AppShellProps) {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const closeNavigation = () => setNavigationOpen(false);
 
@@ -106,11 +114,11 @@ export function AppShell({ children }: { children: ReactNode }) {
         </nav>
         <div className="sidebar-footer">
           <div className="user-chip">
-            <span className="avatar">AM</span>
+            <span className="avatar">{user.name.charAt(0)}</span>
             <div>
-              <b>Alex Morgan</b>
+              <b>{user.name}</b>
               <small className="muted" style={{ display: "block" }}>
-                alex@nexora.dev
+                {user.email}
               </small>
             </div>
           </div>

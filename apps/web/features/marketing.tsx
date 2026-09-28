@@ -39,7 +39,7 @@ export function Logo() {
     </Link>
   );
 }
-export function Marketing() {
+export function Marketing({ destination }: { destination: string }) {
   return (
     <>
       <header className="landing-nav">
@@ -55,7 +55,7 @@ export function Marketing() {
             <Link className="btn ghost" href={routes.login}>
               Log in
             </Link>
-            <Link className="btn" href={routes.register}>
+            <Link className="btn" href={destination}>
               Get started
             </Link>
           </div>
@@ -71,7 +71,7 @@ export function Marketing() {
               the work that moves your team forward.
             </p>
             <div className="hero-actions">
-              <Link className="btn" href={routes.register}>
+              <Link className="btn" href={destination}>
                 Get started free
               </Link>
               <a className="btn secondary" href="#how">
@@ -262,7 +262,7 @@ export function Marketing() {
         <section className="cta-band">
           <h2>Make your next good idea easier to share.</h2>
           <p>Bring your team&apos;s work into one calm, collaborative space.</p>
-          <Link className="btn" href={routes.register}>
+          <Link className="btn" href={destination}>
             Get started free
           </Link>
         </section>

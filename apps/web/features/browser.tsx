@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   FileText,
@@ -9,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { routes } from "@/lib/constants";
+import { useState } from "react";
 
 const documents = [
   {
@@ -48,19 +51,30 @@ const copy = {
   trash: ["Trash", "Items in trash are deleted after 30 days."],
 } as const;
 
+type DocumentProps = {
+  id: string;
+  title: string;
+  pserson: string;
+}
+
 export function DocumentBrowser({
   scope = "all",
   dashboard = false,
+  userName
 }: {
   scope?: keyof typeof copy;
   dashboard?: boolean;
+  userName: string;
 }) {
+
   const [title, description] = copy[scope];
+
+  const [document, setDocument] = useState<DocumentProps[]>([])
   return (
     <div className="app-content">
       <div className="page-title">
         <div>
-          <h1>{dashboard ? "Good morning, Alex" : title}</h1>
+          <h1>{dashboard ? `Good Morning, ${userName}` : title}</h1>
           <p>
             {dashboard
               ? "You have 4 documents · 3 shared with you"
@@ -156,7 +170,6 @@ export function DocumentBrowser({
                 <FileText size={18} />
               </span>
               <h3>{doc.title}</h3>
-              <p>{doc.excerpt}</p>
               <div className="doc-meta">
                 <span>Edited {doc.updated}</span>
                 <span className="collabs">
