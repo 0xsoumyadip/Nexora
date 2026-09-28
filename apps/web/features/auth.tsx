@@ -6,9 +6,15 @@ import { Logo } from "@/features/marketing";
 import { routes } from "@/lib/constants";
 import { useState } from "react";
 import { signIn, signUp } from "@/lib/auth";
+import { ApiError } from "@/client";
+import { useRouter } from "next/navigation";
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const login = mode === "login";
+  const router = useRouter();
+
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
+  const [formError, setFormError] = useState("");
 
   const [fullName, setFullName] = useState("");
   const [userName, setUserName] = useState("");
@@ -17,12 +23,30 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("button clicked");
-    if (mode === "login") {
-      console.log(email, password);
-      await signIn({ email, password });
-    } else {
-      await signUp({ name: fullName, userName, email, password });
+    setFieldErrors({});
+    setFormError("");
+
+    try {
+      const response =
+        mode === "login"
+          ? await signIn({ email, password })
+          : await signUp({
+              name: fullName,
+              userName,
+              email,
+              password,
+            });
+
+      if (response.status) {
+        router.push(mode === "login" ? "/dashboard" : "/login");
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setFieldErrors(error.fieldErrors);
+        setFormError(error.message);
+      } else {
+        setFormError("Something went wrong.");
+      }
     }
   }
 
@@ -47,6 +71,11 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
                     autoComplete="name"
                     onChange={(e) => setFullName(e.target.value)}
                   />
+                  {fieldErrors.name?.[0] && (
+                    <small className="field-error">
+                      {fieldErrors.name[0]}
+                    </small>
+                  )}
                 </div>
               )}
               {!login && (
@@ -57,6 +86,11 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
                     autoComplete="name"
                     onChange={(e) => setUserName(e.target.value)}
                   />
+                  {fieldErrors.userName?.[0] && (
+                    <small className="field-error">
+                      {fieldErrors.userName[0]}
+                    </small>
+                  )}
                 </div>
               )}
               <div className="form-group">
@@ -67,6 +101,11 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
                 />
+                {fieldErrors.email?.[0] && (
+                  <small className="field-error">
+                    {fieldErrors.email[0]}
+                  </small>
+                )}
               </div>
               <div className="form-group">
                 <div className="form-row">
@@ -84,6 +123,11 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
                     autoComplete="current-password"
                     onChange={(e) => setPassword(e.target.value)}
                   />
+                  {fieldErrors.password?.[0] && (
+                    <small className="field-error">
+                      {fieldErrors.password[0]}
+                    </small>
+                  )}
                   <button
                     className="icon-button"
                     type="button"
@@ -112,6 +156,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
                   ? "Remember me"
                   : "I agree to the Terms and Privacy Policy"}
               </label>
+              {formError && <div className="form-alert">{formError}</div>}
               <button className="btn full" type="submit">
                 {login ? "Log in" : "Create account"}
               </button>

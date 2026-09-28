@@ -91,6 +91,9 @@ importers:
         specifier: 19.2.8
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@nexora/auth':
+        specifier: workspace:*
+        version: link:../../packages/auth
       '@nexora/editor':
         specifier: workspace:*
         version: link:../../packages/editor

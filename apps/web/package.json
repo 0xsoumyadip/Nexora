@@ -22,6 +22,7 @@
     "@nexora/editor": "workspace:*",
     "@nexora/eslint-config": "workspace:*",
     "@nexora/typescript-config": "workspace:*",
+    "@nexora/auth": "workspace:*",
     "@types/node": "26.4.1",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.5",

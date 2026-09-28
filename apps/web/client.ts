@@ -4,6 +4,21 @@ if (!API_URL) {
   throw new Error("NEXT_PUBLIC_API_URL is not configure.");
 }
 
+type ApiErrorBody = {
+  message?: string;
+  error?: Record<string, string[]>;
+};
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public fieldErrors: Record<string, string[]> = {},
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 export async function apiRequest<T>(
   path: string,
   options: RequestInit = {},
@@ -26,15 +41,10 @@ export async function apiRequest<T>(
     response.status === 204 ? null : await response.json().catch(() => null);
 
   if (!response.ok) {
-    const message =
-      typeof body === "object" &&
-      body !== null &&
-      "message" in body &&
-      typeof body.message === "string"
-        ? body.message
-        : `Request failed (${response.status})`;
-    
-    throw new Error(message);
+    const errorBody = body as ApiErrorBody | null;
+    const message = errorBody?.message ?? `Response failed(${response.status})`;
+
+    throw new ApiError(message, errorBody?.error);
   }
 
   return body as T;

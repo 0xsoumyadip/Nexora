@@ -5,6 +5,7 @@ import prisma from "@nexora/database";
 
 export const signUp = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     const parsedData = createUserSchema.safeParse(req.body);
     if (!parsedData.success) {
       return res.status(400).json({
