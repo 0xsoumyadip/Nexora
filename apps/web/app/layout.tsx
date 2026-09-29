@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Docly — Work together, beautifully",
+  title: "Nexora — Work together, beautifully",
   description: "A calm, collaborative home for your team's documents.",
 };
 

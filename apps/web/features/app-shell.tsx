@@ -149,7 +149,7 @@ export function AppShell({ children, user }: AppShellProps) {
               Search documents <kbd>⌘ K</kbd>
             </button>
             <ThemeToggle />
-            <span className="avatar">AM</span>
+            <span className="avatar">{user.name.charAt(0)}</span>
           </div>
         </header>
         {children}

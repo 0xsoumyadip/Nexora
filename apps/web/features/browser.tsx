@@ -69,7 +69,7 @@ export function DocumentBrowser({
 
   const [title, description] = copy[scope];
 
-  const [document, setDocument] = useState<DocumentProps[]>([])
+  const [document, setDocument] = useState<DocumentProps[]>([]);
   return (
     <div className="app-content">
       <div className="page-title">
