@@ -25,7 +25,8 @@
     "@nexora/typescript-config": "workspace:*",
     "bcrypt": "^6.0.0",
     "better-auth": "^1.7.5",
-    "dotenv": "^17.4.2"
+    "dotenv": "^17.4.2",
+    "resend": "^6.31.0"
   },
   "keywords": [],
   "author": "",

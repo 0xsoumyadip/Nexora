@@ -14,7 +14,7 @@ datasource db {
 
 model User {
   id            String  @id @default(uuid())
-  name      String?
+  name          String?
   userName      String  @unique
   email         String  @unique
   emailVerified Boolean @default(false)
@@ -23,10 +23,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions Session[]
-  accounts Account[]
-  authoredDocuments  Document[] @relation("DocumentAuthor")
-  editedDocuments    Document[] @relation("DocumentLastEditor")
+  sessions          Session[]
+  accounts          Account[]
+  authoredDocuments Document[] @relation("DocumentAuthor")
+  editedDocuments   Document[] @relation("DocumentLastEditor")
 }
 
 model Session {
@@ -38,7 +38,7 @@ model Session {
   ipAddress String?
   userAgent String?
   userId    String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
   @@index([userId])
@@ -50,7 +50,7 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -78,15 +78,17 @@ model Verification {
 }
 
 model Document {
-  id        String   @id @default(uuid())
+  id String @id @default(uuid())
 
   name      String
+  url       String
+  public_id String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   authorId       String
-  starred        Boolean    @default(false)
+  starred        Boolean @default(false)
   lastEditedById String?
 
   author       User  @relation("DocumentAuthor", fields: [authorId], references: [id])

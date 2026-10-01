@@ -36,6 +36,10 @@ export const documentSchema = z.object({
     .min(1, "Document name is required.")
     .max(10, "Document name must be with in 10 characters"),
 
+  url: z.string().url(),
+
+  public_id: z.string().url(),
+
   authorId: z.string().uuid("Invalid id."),
 
   lastEditedById: z.string().uuid("Invalid id.").optional(),

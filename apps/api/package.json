@@ -18,7 +18,6 @@
     }
   },
   "dependencies": {
-    "cloudinary": "^2.11.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
@@ -32,8 +31,8 @@
     "@nexora/auth": "workspace:*",
     "@nexora/database": "workspace:*",
     "@nexora/typescript-config": "workspace:*",
-    "@nexora/ws": "workspace:*",
     "@nexora/validation": "workspace:*",
+    "@nexora/ws": "workspace:*",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/multer": "^2.2.0",

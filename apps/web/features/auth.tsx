@@ -38,7 +38,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
             });
 
       if (response.status) {
-        router.push(mode === "login" ? "/dashboard" : "/login");
+        router.push(mode === "login" ? "/dashboard" : "/verifyEmail");
       }
     } catch (error) {
       if (error instanceof ApiError) {
