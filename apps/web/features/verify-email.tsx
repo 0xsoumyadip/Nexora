@@ -4,34 +4,49 @@ import Link from "next/link";
 import { MailCheck } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Logo } from "@/features/marketing";
-import { resendVerification } from "@/lib/auth";
+import { verifyEmailOTP } from "@/lib/auth";
 
-export function VerifyEmailPanel({
-  verified,
-  hasError,
-}: {
-  verified: boolean;
-  hasError: boolean;
-}) {
+export function VerifyEmailPanel() {
+  const [isVerified, setIsVerified] = useState(false);
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(
-    hasError ? "That verification link is invalid or has expired." : "",
-  );
+  const [otp, setOtp] = useState("");
+  const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
 
-  async function handleResend(event: FormEvent<HTMLFormElement>) {
+  async function handleVerify(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
-    setIsSending(true);
+    setIsVerifying(true);
 
     try {
-      const result = await resendVerification(email);
-      setMessage(result.message);
+      await verifyEmailOTP(email, otp);
+      setIsVerified(true);
     } catch (error) {
       setMessage(
         error instanceof Error
           ? error.message
-          : "Unable to send a verification email right now.",
+          : "That code could not be verified. Please try again.",
+      );
+    } finally {
+      setIsVerifying(false);
+    }
+  }
+
+  async function handleResend() {
+    setMessage("");
+    setIsSending(true);
+
+    try {
+      const result = await verifyEmailOTP(email, otp);
+      if(result.status === true){
+        setMessage("Verification successfull.")
+      }
+    } catch (error) {
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : "Unable to send a verification code right now.",
       );
     } finally {
       setIsSending(false);
@@ -42,20 +57,20 @@ export function VerifyEmailPanel({
     <main className="status-page">
       <Logo />
       <MailCheck size={48} aria-hidden="true" />
-      <h1>{verified ? "Email verified" : "Check your email"}</h1>
+      <h1>{isVerified ? "Email verified" : "Check your email"}</h1>
       <p>
-        {verified
+        {isVerified
           ? "Your email address is verified. You can now sign in."
-          : "Open the verification link we sent you. It will bring you back here when your email is verified."}
+          : "Enter the six-digit code we sent to your email address."}
       </p>
 
-      {verified ? (
+      {isVerified ? (
         <Link className="btn" href="/login">
           Go to sign in
         </Link>
       ) : (
-        <form onSubmit={handleResend}>
-          <label htmlFor="verification-email">Need another link?</label>
+        <form onSubmit={handleVerify}>
+          <label htmlFor="verification-email">Email address</label>
           <input
             id="verification-email"
             className="input"
@@ -65,14 +80,35 @@ export function VerifyEmailPanel({
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
+          <label htmlFor="verification-code">Verification code</label>
+          <input
+            id="verification-code"
+            className="input"
+            type="text"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            pattern="[0-9]{6}"
+            maxLength={6}
+            required
+            value={otp}
+            onChange={(event) => setOtp(event.target.value.replace(/\D/g, ""))}
+          />
           {message && <p role="status">{message}</p>}
-          <button className="btn" type="submit" disabled={isSending}>
-            {isSending ? "Sending…" : "Resend verification email"}
+          <button className="btn" type="submit" disabled={isVerifying}>
+            {isVerifying ? "Verifying…" : "Verify email"}
+          </button>
+          <button
+            className="btn secondary"
+            type="button"
+            disabled={isSending || !email}
+            onClick={handleResend}
+          >
+            {isSending ? "Sending…" : "Resend code"}
           </button>
         </form>
       )}
 
-      {!verified && !message && (
+      {!isVerified && !message && (
         <p className="muted" style={{ marginTop: 16 }}>
           Check your spam folder if you don’t see the email.
         </p>

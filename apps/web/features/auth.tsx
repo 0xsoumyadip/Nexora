@@ -21,6 +21,24 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  type signInProps = {
+    email: string;
+    password: string;
+  }
+
+  const handleSignIn = async ({ email, password }: signInProps) => {
+    try {
+      return await signIn({email, password});
+    } catch (error) {
+      if (error instanceof ApiError && error.status === 403 && error.code === "EMAIL_NOT_VERIFIED") {
+        router.push("/verifyEmail");
+        return;
+      }
+
+      console.error("Verification error: ", error);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setFieldErrors({});
@@ -29,15 +47,15 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     try {
       const response =
         mode === "login"
-          ? await signIn({ email, password })
+          ? await handleSignIn({ email, password })
           : await signUp({
-              name: fullName,
-              userName,
-              email,
-              password,
-            });
+            name: fullName,
+            userName,
+            email,
+            password,
+          });
 
-      if (response.status) {
+      if (response?.status) {
         router.push(mode === "login" ? "/dashboard" : "/verifyEmail");
       }
     } catch (error) {

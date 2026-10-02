@@ -6,12 +6,15 @@ if (!API_URL) {
 
 type ApiErrorBody = {
   message?: string;
+  code?: string;
   error?: Record<string, string[]>;
 };
 
 export class ApiError extends Error {
   constructor(
     message: string,
+    public status: number,
+    public code?: string,
     public fieldErrors: Record<string, string[]> = {},
   ) {
     super(message);
@@ -44,7 +47,12 @@ export async function apiRequest<T>(
     const errorBody = body as ApiErrorBody | null;
     const message = errorBody?.message ?? `Response failed(${response.status})`;
 
-    throw new ApiError(message, errorBody?.error);
+    throw new ApiError(
+      message,
+      response.status,
+      errorBody?.code,
+      errorBody?.error,
+    );
   }
 
   return body as T;

@@ -32,12 +32,9 @@ export function signIn(input: SignInInput) {
   });
 }
 
-export async function resendVerification(email: string) {
-  return apiRequest<{ status: boolean; message: string }>(
-    "/auth/send-verification-email",
-    {
-      method: "POST",
-      body: JSON.stringify({ email }),
-    },
-  );
+export function verifyEmailOTP(email: string, otp: string) {
+  return apiRequest<{ status: boolean }>("/api/auth/email-otp/verify-email", {
+    method: "POST",
+    body: JSON.stringify({ email, otp }),
+  });
 }

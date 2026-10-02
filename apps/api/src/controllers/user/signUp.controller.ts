@@ -41,7 +41,7 @@ export const signUp = async (req: Request, res: Response) => {
         userName,
         email,
         password,
-        image,
+        ...(image ? { image } : {}),
         callbackURL: `${process.env.WEB_URL ?? "http://localhost:3000"}/verifyEmail?verified=1`,
       },
     });
