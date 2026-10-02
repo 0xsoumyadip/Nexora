@@ -55,10 +55,12 @@ export async function sendVerificationEmail({
   });
 
   if(error) {
-    console.error("Resend email: ", error);
+    console.error("Resend rejected verification email:", error);
 
     throw new Error("Unable to send verification email.")
   }
+
+  console.info("Resend accepted verification email:", data?.id);
 
   return data;
 }

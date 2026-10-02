@@ -22,19 +22,17 @@ export const signUp = async (req: Request, res: Response) => {
       },
     });
 
-    if (existingUser) {
-      if (existingUser.email) {
-        return res.status(409).json({
-          status: false,
-          message: "User already exists with this email.",
-        });
-      }
-      if (existingUser.userName) {
-        return res.status(409).json({
-          status: false,
-          message: "This user name is already taken.",
-        });
-      }
+    if (existingUser?.email === email) {
+      return res.status(409).json({
+        status: false,
+        message: "User already exists with this email.",
+      });
+    }
+    if (existingUser?.userName === userName) {
+      return res.status(409).json({
+        status: false,
+        message: "This user name is already taken.",
+      });
     }
 
     const user = await auth.api.signUpEmail({
@@ -44,6 +42,7 @@ export const signUp = async (req: Request, res: Response) => {
         email,
         password,
         image,
+        callbackURL: `${process.env.WEB_URL ?? "http://localhost:3000"}/verifyEmail?verified=1`,
       },
     });
 
