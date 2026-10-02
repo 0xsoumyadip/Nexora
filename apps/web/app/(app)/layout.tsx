@@ -16,5 +16,9 @@ export default async function Layout({
     redirect("/login");
   }
 
+  if(!session.user.emailVerified){
+    redirect("/verifyEmail");
+  }
+
   return <AppShell user={{ name: session.user.name, email: session.user.email }}>{children}</AppShell>;
 }

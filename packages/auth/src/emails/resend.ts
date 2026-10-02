@@ -1,10 +1,16 @@
 import { Resend } from "resend";
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("Resend api key is not set.");
-}
+let resendClient: Resend | undefined;
 
-export const resned = new Resend(process.env.RESEND_API_KEY);
+function getResendClient() {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    throw new Error("Resend API key is not set.");
+  }
+
+  resendClient ??= new Resend(apiKey);
+  return resendClient;
+}
 
 interface sendVerificationEmailParams {
   to: string;
@@ -17,8 +23,13 @@ export async function sendVerificationEmail({
   verificationUrl,
   userName,
 }: sendVerificationEmailParams) {
-  const { data, error } = await resned.emails.send({
-    from: process.env.RESEND_FROM_EMAIL!,
+  const from = process.env.RESEND_FROM_EMAIL;
+  if (!from) {
+    throw new Error("Resend sender email is not set.");
+  }
+
+  const { data, error } = await getResendClient().emails.send({
+    from,
     to,
     subject: "Verify your nexora email",
     html: `

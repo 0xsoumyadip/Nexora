@@ -1,8 +1,26 @@
 import Link from "next/link";
 import { MailCheck } from "lucide-react";
 import { Logo } from "@/features/marketing";
+import { auth } from "@nexora/auth/auth";
+import { redirect } from "next/navigation";
 
-export default function VerifyEmailPage() {
+export default async function VerifyEmailPage({ searchParams }: { searchParams?: { token?: string; callbackUrl?: string } }) {
+  const token = searchParams?.token;
+
+  if (!token) {
+    redirect("/login?error=missing_verification_token");
+  }
+
+  try {
+    await auth.api.verifyEmail({
+      query: { token },
+    });
+
+    redirect("/login?verified=1")
+  } catch (error) {
+    redirect("/login?error=invalid_varification")
+  }
+
   return (
     <main className="status-page">
       <Logo />
