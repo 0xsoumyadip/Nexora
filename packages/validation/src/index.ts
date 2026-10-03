@@ -18,16 +18,14 @@ export const createUserSchema = z.object({
       "Username can only contain letters, numbers, and underscores",
     ),
 
-  password: z
-    .string()
-    .min(6, "Password must be atleast 6 characters."),
+  password: z.string().min(6, "Password must be atleast 6 characters."),
   image: z.string().optional(),
 });
 
 export const signInUserSchema = z.object({
   email: z.string().trim().email("Please enter a valid email"),
-  password: z.string().min(6, "Password must be atleast 6 characters.")
-})
+  password: z.string().min(6, "Password must be atleast 6 characters."),
+});
 
 export const documentSchema = z.object({
   name: z
@@ -43,4 +41,9 @@ export const documentSchema = z.object({
   authorId: z.string().uuid("Invalid id."),
 
   lastEditedById: z.string().uuid("Invalid id.").optional(),
+});
+
+export const verificationSchema = z.object({
+  email: z.string().trim().email("Enter a valid email."),
+  otp: z.string().regex(/^\d{6}$/, "OTP must contain exactly 6 digits."),
 });

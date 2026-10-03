@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { MailCheck } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { Logo } from "@/features/marketing";
-import { verifyEmailOTP } from "@/lib/auth";
+import { sendVerificationOTP, verifyEmailOTP } from "@/lib/auth";
+import { useSearchParams } from "next/navigation";
+import { ApiError } from "@/client";
 
 export function VerifyEmailPanel() {
   const [isVerified, setIsVerified] = useState(false);
@@ -13,6 +15,37 @@ export function VerifyEmailPanel() {
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+
+
+    const data = searchParams.get("email");
+
+    setEmail(data ?? "")
+  }, [])
+
+  useEffect(() => {
+    if (!email) return;
+    async function sendInitialOTP() {
+      setMessage("");
+      setIsSending(true);
+
+      try {
+        const result = await sendVerificationOTP(email);
+        console.log(result);
+
+        setMessage("A varification code is sent to your email address.")
+      } catch (error) {
+        setMessage(error instanceof ApiError ? error.message : "Unable to send varification code.");
+      } finally {
+        setIsSending(false);
+      }
+    }
+
+    sendInitialOTP();
+  }, [])
 
   async function handleVerify(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,10 +71,10 @@ export function VerifyEmailPanel() {
     setIsSending(true);
 
     try {
-      const result = await verifyEmailOTP(email, otp);
-      if(result.status === true){
-        setMessage("Verification successfull.")
-      }
+      const result = await sendVerificationOTP(email);
+
+      setMessage("A varification code is sent at your email address.")
+      
     } catch (error) {
       setMessage(
         error instanceof Error
@@ -70,16 +103,6 @@ export function VerifyEmailPanel() {
         </Link>
       ) : (
         <form onSubmit={handleVerify}>
-          <label htmlFor="verification-email">Email address</label>
-          <input
-            id="verification-email"
-            className="input"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
           <label htmlFor="verification-code">Verification code</label>
           <input
             id="verification-code"

@@ -26,12 +26,19 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     password: string;
   }
 
+  type signUpProps = {
+    name: string;
+    userName: string;
+    email: string;
+    password: string;
+  }
+
   const handleSignIn = async ({ email, password }: signInProps) => {
     try {
-      return await signIn({email, password});
+      return await signIn({ email, password });
     } catch (error) {
       if (error instanceof ApiError && error.status === 403 && error.code === "EMAIL_NOT_VERIFIED") {
-        router.push("/verifyEmail");
+        router.push(`/verifyEmail?email=${encodeURIComponent(email)}`);
         return;
       }
 
@@ -56,7 +63,7 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
           });
 
       if (response?.status) {
-        router.push(mode === "login" ? "/dashboard" : "/verifyEmail");
+        router.push(mode === "login" ? "/dashboard" : `/verifyEmail?email=${encodeURIComponent(email)}`);
       }
     } catch (error) {
       if (error instanceof ApiError) {

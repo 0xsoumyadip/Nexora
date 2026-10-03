@@ -1,4 +1,5 @@
-import { apiRequest } from "@/client";
+import { ApiError, apiRequest } from "@/client";
+import { authClient } from "@nexora/auth/client";
 
 type ApiRequest = {
   status: boolean;
@@ -37,4 +38,11 @@ export function verifyEmailOTP(email: string, otp: string) {
     method: "POST",
     body: JSON.stringify({ email, otp }),
   });
+}
+
+export async function sendVerificationOTP(email: string) {
+  return apiRequest<ApiRequest>("/auth/send-verification-otp", {
+    method: "POST",
+    body: JSON.stringify({ email })
+  })
 }
