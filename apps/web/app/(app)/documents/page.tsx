@@ -1,11 +1,10 @@
 import { DocumentBrowser } from "@/features/browser";
-import { auth } from "@nexora/auth/auth";
-import { headers } from "next/headers";
+import { getCurrentSession } from "@/lib/session";
 
 export default async function Page() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
+  const session = await getCurrentSession()
+  const userName =
+    typeof session?.user.userName === "string" ? session.user.userName : "";
 
-  return <DocumentBrowser scope="all" userName={session?.user.userName ?? " "} />;
+  return <DocumentBrowser scope="all" userName={userName} />;
 }

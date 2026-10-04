@@ -46,3 +46,10 @@ export async function sendVerificationOTP(email: string) {
     body: JSON.stringify({ email })
   })
 }
+
+export async function createDocument(userId: string) {
+  return apiRequest<ApiRequest>("/api/document", {
+    method: "POST",
+    body: JSON.stringify({userId})
+  })
+}

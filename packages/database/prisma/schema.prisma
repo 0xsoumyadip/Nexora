@@ -27,6 +27,7 @@ model User {
   accounts          Account[]
   authoredDocuments Document[] @relation("DocumentAuthor")
   editedDocuments   Document[] @relation("DocumentLastEditor")
+  googleDriveConnection GoogleDriveConnection?
 }
 
 model Session {
@@ -93,4 +94,18 @@ model Document {
 
   author       User  @relation("DocumentAuthor", fields: [authorId], references: [id])
   lastEditedBy User? @relation("DocumentLastEditor", fields: [lastEditedById], references: [id])
+}
+
+model GoogleDriveConnection {
+  id      String    @id @default(uuid())
+  userId    String    @unique
+
+  accessToken     String?
+  refreshToken    String?
+  expiryDate      DateTime?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime  @updatedAt
+
+ user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

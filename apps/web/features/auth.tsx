@@ -26,13 +26,6 @@ export function AuthPage({ mode }: { mode: "login" | "register" }) {
     password: string;
   }
 
-  type signUpProps = {
-    name: string;
-    userName: string;
-    email: string;
-    password: string;
-  }
-
   const handleSignIn = async ({ email, password }: signInProps) => {
     try {
       return await signIn({ email, password });

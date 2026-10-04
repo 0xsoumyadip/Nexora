@@ -47,3 +47,8 @@ export const verificationSchema = z.object({
   email: z.string().trim().email("Enter a valid email."),
   otp: z.string().regex(/^\d{6}$/, "OTP must contain exactly 6 digits."),
 });
+
+export const googleDriveCallbackSchema = z.object({
+  code: z.string().min(1, "GDrive is code is required."),
+  state: z.string().min(1, "GDrive state is required.").optional()
+})

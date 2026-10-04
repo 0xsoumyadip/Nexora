@@ -1,8 +1,43 @@
+"use client";
+
 import { ArrowLeft, FileText } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/lib/constants";
+import { useSession } from "@nexora/auth/client"
+import { useRouter } from "next/navigation";
+import { ApiError } from "@/client";
+import { createDocument } from "../lib/auth";
+import { useEffect } from "react";
 
 export function NewDocument() {
+
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isPending && !session) {
+      router.replace("/login");
+    }
+  }, [isPending, session, router]);
+
+  if (isPending || !session) {
+    return null;
+  }
+
+  const userId = session.user.id;
+
+  async function handleClick() {
+    try {
+      const result = await createDocument(userId);
+      console.log(result);
+    } catch (error) {
+      if (error instanceof ApiError) {
+        console.log("Create new document error: ", error.message)
+      }
+      console.log("Unable to create new document");
+    }
+  }
+
   return (
     <div className="app-content new-doc">
       <Link className="btn ghost" href={routes.dashboard}>
@@ -22,7 +57,7 @@ export function NewDocument() {
         <p>
           Start with an empty page and shape it around the work in front of you.
         </p>
-        <button className="btn full" type="button">
+        <button className="btn full" type="button" onClick={handleClick}>
           Create document
         </button>
       </div>
