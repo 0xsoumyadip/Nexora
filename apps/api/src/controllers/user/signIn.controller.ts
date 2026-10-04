@@ -40,9 +40,7 @@ export const signIn = async (req: Request, res: Response) => {
       },
     });
 
-    for (const cookie of headers.getSetCookie()) {
-      res.append("Set-Cookie", cookie);
-    }
+    res.setHeader("Set-Cookie", headers.getSetCookie());
 
     return res.status(200).json({
       status: true,

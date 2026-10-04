@@ -8,12 +8,13 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { comparePassword, hashedPassword } from "./bcrypt.js";
 import { nextCookies } from "better-auth/next-js";
 import dotenv from "dotenv";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { sendVerificationOTP } from "./emails/resend.js";
 import { emailOTP } from "better-auth/plugins";
 
 dotenv.config({
-  path: resolve(process.cwd(), "packages/auth/.env"),
+  path: resolve(dirname(fileURLToPath(import.meta.url)), "../.env"),
   quiet: true,
 });
 
