@@ -23,11 +23,12 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sessions          Session[]
-  accounts          Account[]
-  authoredDocuments Document[] @relation("DocumentAuthor")
-  editedDocuments   Document[] @relation("DocumentLastEditor")
+  sessions              Session[]
+  accounts              Account[]
+  authoredDocuments     Document[]             @relation("DocumentAuthor")
+  editedDocuments       Document[]             @relation("DocumentLastEditor")
   googleDriveConnection GoogleDriveConnection?
+  googleOAuthState      GoogleOAuthState[]
 }
 
 model Session {
@@ -97,15 +98,27 @@ model Document {
 }
 
 model GoogleDriveConnection {
-  id      String    @id @default(uuid())
-  userId    String    @unique
+  id     String @id @default(uuid())
+  userId String @unique
 
-  accessToken     String?
-  refreshToken    String?
-  expiryDate      DateTime?
+  accessToken  String?
+  refreshToken String?
+  expiryDate   DateTime?
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
- user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model GoogleOAuthState {
+  id         String   @id @default(uuid())
+  state      String   @unique
+  userId     String
+  expiryDate DateTime
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

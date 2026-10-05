@@ -9,10 +9,23 @@ import documentRoute from "./routes/document.route.ts";
 
 const app = express();
 const port = Number(process.env.PORT ?? 8080);
+const allowedOrigins = new Set([
+  process.env.WEB_URL ?? "http://localhost:3000",
+  ...(process.env.NODE_ENV === "production"
+    ? []
+    : ["http://localhost:3000", "http://127.0.0.1:3000"]),
+]);
 
 app.use(
   cors({
-    origin: process.env.WEB_URL ?? "http://localhost:3000",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.has(origin)) {
+        callback(null, true);
+        return;
+      }
+
+      callback(new Error(`Origin ${origin} is not allowed by CORS.`));
+    },
     credentials: true,
   }),
 );

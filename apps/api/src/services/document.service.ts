@@ -3,14 +3,17 @@ import { getGoogleDriveConnection } from "./google-drive.service.ts";
 
 export async function createGoogleDriveDocument (userId: string) {
     const googleDriveConnection = await getGoogleDriveConnection(userId);
+    console.log(googleDriveConnection);
 
     if(!googleDriveConnection) {
         return {
-            requiredGoogleDriveConnection: true
+            requiredGoogleDriveConnection: true,
+            connection: null
         }
     }
 
     return {
-        requireGoogleDriveConnection: false
+        requireGoogleDriveConnection: false,
+        connection: googleDriveConnection
     }
 }

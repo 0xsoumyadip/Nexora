@@ -1,5 +1,4 @@
 import { ApiError, apiRequest } from "@/client";
-import { authClient } from "@nexora/auth/client";
 
 type ApiRequest = {
   status: boolean;
@@ -43,13 +42,34 @@ export function verifyEmailOTP(email: string, otp: string) {
 export async function sendVerificationOTP(email: string) {
   return apiRequest<ApiRequest>("/auth/send-verification-otp", {
     method: "POST",
-    body: JSON.stringify({ email })
-  })
+    body: JSON.stringify({ email }),
+  });
 }
 
-export async function createDocument(userId: string) {
-  return apiRequest<ApiRequest>("/api/document", {
-    method: "POST",
-    body: JSON.stringify({userId})
-  })
+type CreateDocumentResponse = ApiRequest & {
+  requireGoogleDriveConnection?: boolean;
+};
+
+export async function createDocument() {
+  try {
+    const response = await apiRequest<CreateDocumentResponse>("/api/document", {
+      method: "POST",
+    });
+
+    console.log(response);
+    return response;
+  } catch (error) {
+    if (error instanceof ApiError) {
+      const errorBody = error.responseBody as CreateDocumentResponse | undefined;
+      if (error.status === 403 && errorBody?.requireGoogleDriveConnection) {
+        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/connect`;
+        return;
+      }
+
+      console.error("Create document request failed:", error.status, error.message);
+      return;
+    }
+
+    console.error("Failed to create document:", error);
+  }
 }

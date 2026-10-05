@@ -20,7 +20,6 @@ export function VerifyEmailPanel() {
 
   useEffect(() => {
 
-
     const data = searchParams.get("email");
 
     setEmail(data ?? "")

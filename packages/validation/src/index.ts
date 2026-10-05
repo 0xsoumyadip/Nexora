@@ -50,5 +50,5 @@ export const verificationSchema = z.object({
 
 export const googleDriveCallbackSchema = z.object({
   code: z.string().min(1, "GDrive is code is required."),
-  state: z.string().min(1, "GDrive state is required.").optional()
+  state: z.string().min(1, "GDrive state is required.")
 })

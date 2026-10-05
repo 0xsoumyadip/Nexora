@@ -16,6 +16,7 @@ export class ApiError extends Error {
     public status: number,
     public code?: string,
     public fieldErrors: Record<string, string[]> = {},
+    public responseBody?: unknown,
   ) {
     super(message);
     this.name = "ApiError";
@@ -52,6 +53,7 @@ export async function apiRequest<T>(
       response.status,
       errorBody?.code,
       errorBody?.error,
+      body,
     );
   }
 

@@ -3,33 +3,14 @@
 import { ArrowLeft, FileText } from "lucide-react";
 import Link from "next/link";
 import { routes } from "@/lib/constants";
-import { useSession } from "@nexora/auth/client"
-import { useRouter } from "next/navigation";
 import { ApiError } from "@/client";
 import { createDocument } from "../lib/auth";
-import { useEffect } from "react";
 
 export function NewDocument() {
 
-  const { data: session, isPending } = useSession();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isPending && !session) {
-      router.replace("/login");
-    }
-  }, [isPending, session, router]);
-
-  if (isPending || !session) {
-    return null;
-  }
-
-  const userId = session.user.id;
-
   async function handleClick() {
     try {
-      const result = await createDocument(userId);
-      console.log(result);
+      await createDocument();
     } catch (error) {
       if (error instanceof ApiError) {
         console.log("Create new document error: ", error.message)
