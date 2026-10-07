@@ -82,19 +82,24 @@ model Verification {
 model Document {
   id String @id @default(uuid())
 
-  name      String
-  url       String
-  public_id String
+  name  String
+  title String?
+
+  googleDriveFileId String  @unique
+  url               String?
+
+  starred Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   authorId       String
-  starred        Boolean @default(false)
   lastEditedById String?
 
   author       User  @relation("DocumentAuthor", fields: [authorId], references: [id])
   lastEditedBy User? @relation("DocumentLastEditor", fields: [lastEditedById], references: [id])
+
+  @@index([authorId])
 }
 
 model GoogleDriveConnection {

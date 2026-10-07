@@ -10,7 +10,6 @@ import prisma from "@nexora/database";
 
 export async function connectGoogleDrive(req: Request, res: Response) {
   try {
-    console.log("Hit the route");
     const userId = req.auth.user.id;
 
     const state = await createGoogleOAuthState(userId);
@@ -21,7 +20,6 @@ export async function connectGoogleDrive(req: Request, res: Response) {
       scope: ["https://www.googleapis.com/auth/drive.file"],
       state,
     });
-
     return res.redirect(authUrl);
   } catch (error) {
     console.log("Google OAuth error: ", error);

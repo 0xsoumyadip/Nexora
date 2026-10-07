@@ -48,6 +48,11 @@ export async function sendVerificationOTP(email: string) {
 
 type CreateDocumentResponse = ApiRequest & {
   requireGoogleDriveConnection?: boolean;
+  document?: {
+    id: string;
+    name: string;
+    googleDriveFileId: string;
+  };
 };
 
 export async function createDocument() {
@@ -56,7 +61,6 @@ export async function createDocument() {
       method: "POST",
     });
 
-    console.log(response);
     return response;
   } catch (error) {
     if (error instanceof ApiError) {

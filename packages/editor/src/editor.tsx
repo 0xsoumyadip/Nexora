@@ -28,7 +28,7 @@ export function DocumentEditor({ documentId }: { documentId: string }) {
   // Connect this Yjs document to the WebSocket room for this document.
   useEffect(() => {
     const url = process.env.NEXT_PUBLIC_YJS_URL;
-
+    console.log(url);
     if (!url) {
       console.error("NEXT_PUBLIC_YJS_URL is not configured");
       return;

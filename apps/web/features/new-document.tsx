@@ -5,12 +5,40 @@ import Link from "next/link";
 import { routes } from "@/lib/constants";
 import { ApiError } from "@/client";
 import { createDocument } from "../lib/auth";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export function NewDocument() {
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const googleDrive = searchParams.get("googleDrive");
+
+  useEffect(() => {
+    async function create() {
+      if (googleDrive === "connected") {
+
+        console.log("hii there!!");
+        const result = await createDocument();
+
+        if (result?.status === true && result.document) {
+          router.replace(`/documents/${result.document.id}`)
+        }
+      }
+
+    }
+    create();
+
+  }, [googleDrive])
+
   async function handleClick() {
     try {
-      await createDocument();
+      const result = await createDocument();
+
+      if(result?.status === true && result.document){
+        router.replace(`/documents/${result.document.id}`);
+      }
     } catch (error) {
       if (error instanceof ApiError) {
         console.log("Create new document error: ", error.message)

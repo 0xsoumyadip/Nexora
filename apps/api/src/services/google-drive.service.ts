@@ -4,14 +4,14 @@ import crypto from "node:crypto";
 export async function getGoogleDriveConnection(userId: string) {
   return await prisma.googleDriveConnection.findUnique({
     where: {
-      id: userId,
+      userId,
     },
   });
 }
 
 export async function isGoogleDriveConnected(userId: string) {
   const connection = await getGoogleDriveConnection(userId);
-
+  console.log(connection);
   return connection !== null;
 }
 
