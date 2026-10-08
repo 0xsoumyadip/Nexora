@@ -19,7 +19,6 @@ export function NewDocument() {
     async function create() {
       if (googleDrive === "connected") {
 
-        console.log("hii there!!");
         const result = await createDocument();
 
         if (result?.status === true && result.document) {

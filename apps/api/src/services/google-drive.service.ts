@@ -11,7 +11,6 @@ export async function getGoogleDriveConnection(userId: string) {
 
 export async function isGoogleDriveConnected(userId: string) {
   const connection = await getGoogleDriveConnection(userId);
-  console.log(connection);
   return connection !== null;
 }
 

@@ -40,6 +40,7 @@
     "@tiptap/pm": "^3.31.3",
     "@tiptap/react": "^3.31.3",
     "@tiptap/starter-kit": "^3.31.3",
+    "lucide-react": "^1.47.0",
     "@tiptap/y-tiptap": "^3.0.9",
     "dotenv": "^17.4.2",
     "y-websocket": "^3.1.0",

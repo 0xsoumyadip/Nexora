@@ -60,12 +60,12 @@ export async function googleDriveCallback(req: Request, res: Response) {
     });
 
     await prisma.googleOAuthState.delete({
-        where: {
-            id: oauthState.id
-        }
+      where: {
+        id: oauthState.id,
+      },
     });
 
-     return res.redirect(
+    return res.redirect(
       `${process.env.WEB_URL}/documents/new?googleDrive=connected`,
     );
   } catch (error) {
