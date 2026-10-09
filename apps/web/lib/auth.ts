@@ -77,3 +77,21 @@ export async function createDocument() {
     console.error("Failed to create document:", error);
   }
 }
+
+type Document = {
+  id: string;
+  name: string;
+  title: string | null;
+  updatedAt: string;
+};
+
+type GetAllDocumentsResponse = {
+  success: boolean;
+  documents: Document[];
+};
+
+export async function getAllDocuments() {
+  return apiRequest<GetAllDocumentsResponse>("/api/document", {
+    method: "GET",
+  });
+}

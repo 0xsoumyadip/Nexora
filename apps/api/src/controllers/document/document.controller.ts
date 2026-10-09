@@ -20,6 +20,20 @@ export async function findAccessableDocments(
   });
 }
 
+export async function findAllAccessableDocuments(userId: string) {
+  return prisma.document.findMany({
+    where: {
+      OR: [{ authorId: userId }, { lastEditedById: userId }],
+    },
+    select: {
+      id: true,
+      name: true,
+      title: true,
+      updatedAt: true,
+    },
+  });
+}
+
 export async function getDocument(req: Request, res: Response) {
   const documentId = req.params.documentId;
   if (typeof documentId !== "string") {
@@ -63,7 +77,8 @@ export async function renameDocument(req: Request, res: Response) {
     });
   }
 
-  const documentName = typeof req.body?.name === "string" ? req.body.name.trim() : "";
+  const documentName =
+    typeof req.body?.name === "string" ? req.body.name.trim() : "";
   if (!documentName || documentName.length > 120) {
     return res.status(402).json({
       status: false,
@@ -113,5 +128,22 @@ export async function renameDocument(req: Request, res: Response) {
       success: false,
       message: "Internal server error",
     });
+  }
+}
+
+export async function getAllDocuments(req: Request, res: Response){
+  try {
+    const documents = await findAllAccessableDocuments(req.auth.user.id);
+
+    return res.status(200).json({
+      success: true,
+      documents
+    });
+  } catch (error) {
+    console.error("Get all documents error: ", error);
+    return res.status(500).json({
+      status: false,
+      message: "Internal server error"
+    })
   }
 }

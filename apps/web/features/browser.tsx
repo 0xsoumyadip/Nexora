@@ -11,38 +11,9 @@ import {
   Trash2,
 } from "lucide-react";
 import { routes } from "@/lib/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAllDocuments } from "@/lib/auth";
 
-const documents = [
-  {
-    id: "project-brief",
-    title: "Project brief",
-    excerpt: "The goals, context, and next decisions for the project.",
-    updated: "2 hours ago",
-    people: ["MC", "NW"],
-  },
-  {
-    id: "research-notes",
-    title: "Research notes",
-    excerpt: "Customer interviews and the patterns emerging from them.",
-    updated: "Yesterday",
-    people: ["AM", "JR"],
-  },
-  {
-    id: "team-retro",
-    title: "Team retrospective",
-    excerpt: "What worked well and what we want to improve next cycle.",
-    updated: "3 days ago",
-    people: ["MC"],
-  },
-  {
-    id: "launch-plan",
-    title: "Launch plan",
-    excerpt: "A clear rollout plan for the upcoming release.",
-    updated: "Last week",
-    people: ["NW", "JR", "AM"],
-  },
-];
 const copy = {
   all: ["My files", "All your documents, in one calm place."],
   recent: ["Recent", "Documents you open will appear here."],
@@ -53,9 +24,12 @@ const copy = {
 
 type DocumentProps = {
   id: string;
-  title: string;
-  pserson: string;
-}
+  name: string | null;
+  title: string | null;
+  author?: string | null;
+  updated?: string | null;
+  people?: string[];
+};
 
 export function DocumentBrowser({
   scope = "all",
@@ -64,12 +38,39 @@ export function DocumentBrowser({
 }: {
   scope?: keyof typeof copy;
   dashboard?: boolean;
-  userName: string;
+  userName?: string;
 }) {
 
   const [title, description] = copy[scope];
 
-  const [document, setDocument] = useState<DocumentProps[]>([]);
+  const [documents, setDocuments] = useState<DocumentProps[]>([]);
+  const [documentsError, setDocumentsError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+
+    async function getDocuments() {
+      try {
+        const response = await getAllDocuments();
+        if (active) {
+          setDocuments(response.documents);
+          setDocumentsError(null);
+        }
+      } catch (error) {
+        console.error("Unable to load documents:", error);
+        if (active) {
+          setDocumentsError("Could not load documents. Check your connection and try again.");
+        }
+      }
+    }
+
+    getDocuments();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   return (
     <div className="app-content">
       <div className="page-title">
@@ -86,6 +87,7 @@ export function DocumentBrowser({
           New file
         </Link>
       </div>
+      {documentsError && <p role="alert" className="form-alert">{documentsError}</p>}
       {dashboard && (
         <>
           <div className="recent-head">
@@ -104,7 +106,7 @@ export function DocumentBrowser({
                 <span className="doc-icon">
                   <FileText size={17} />
                 </span>
-                <h3>{doc.title}</h3>
+                <h3>{doc.name}</h3>
                 <small className="muted">Edited {doc.updated}</small>
               </Link>
             ))}
@@ -125,16 +127,6 @@ export function DocumentBrowser({
             placeholder="Search documents…"
           />
         </div>
-        <select
-          aria-label="Filter by document type"
-          className="select"
-          defaultValue="all"
-        >
-          <option value="all">All types</option>
-          <option>Document</option>
-          <option>Note</option>
-          <option>Spec</option>
-        </select>
         <select
           aria-label="Filter by owner"
           className="select"
@@ -169,11 +161,11 @@ export function DocumentBrowser({
               <span className="doc-icon">
                 <FileText size={18} />
               </span>
-              <h3>{doc.title}</h3>
+              <h3>{doc.name}</h3>
               <div className="doc-meta">
                 <span>Edited {doc.updated}</span>
                 <span className="collabs">
-                  {doc.people.map((person) => (
+                  {(doc.people ?? []).map((person) => (
                     <span className="avatar" key={person}>
                       {person}
                     </span>

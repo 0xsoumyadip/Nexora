@@ -6,23 +6,29 @@ import { routes } from "@/lib/constants";
 import { ApiError } from "@/client";
 import { createDocument } from "../lib/auth";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function NewDocument() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
+  const oauthCreateStarted = useRef(false);
+  const [creating, setCreating] = useState(false);
 
   const googleDrive = searchParams.get("googleDrive");
 
   useEffect(() => {
     async function create() {
-      if (googleDrive === "connected") {
-
+      if (googleDrive === "connected" && !oauthCreateStarted.current) {
+        oauthCreateStarted.current = true;
+        setCreating(true);
         const result = await createDocument();
 
         if (result?.status === true && result.document) {
           router.replace(`/documents/${result.document.id}`)
+        } else {
+          setCreating(false);
+          oauthCreateStarted.current = false;
         }
       }
 
@@ -32,17 +38,22 @@ export function NewDocument() {
   }, [googleDrive])
 
   async function handleClick() {
+    if (creating) return;
+    setCreating(true);
     try {
       const result = await createDocument();
 
       if(result?.status === true && result.document){
         router.replace(`/documents/${result.document.id}`);
+      } else {
+        setCreating(false);
       }
     } catch (error) {
       if (error instanceof ApiError) {
         console.log("Create new document error: ", error.message)
       }
       console.log("Unable to create new document");
+      setCreating(false);
     }
   }
 
@@ -65,8 +76,8 @@ export function NewDocument() {
         <p>
           Start with an empty page and shape it around the work in front of you.
         </p>
-        <button className="btn full" type="button" onClick={handleClick}>
-          Create document
+        <button className="btn full" type="button" onClick={handleClick} disabled={creating}>
+          {creating ? "Creating document…" : "Create document"}
         </button>
       </div>
       <div className="disabled-options">
