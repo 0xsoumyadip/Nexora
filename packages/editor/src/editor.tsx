@@ -13,7 +13,7 @@ import {
 import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 
-type DocumentInfo = { id: string; name: string };
+type DocumentInfo = { id: string; name: string | null };
 type ConnectionState = "connecting" | "connected" | "offline";
 
 const icons = { size: 16, strokeWidth: 1.8 };
@@ -54,12 +54,16 @@ export function DocumentEditor({ documentId }: { documentId: string }) {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/document/${encodeURIComponent(documentId)}`, { credentials: "include" })
       .then(async (response) => {
         if (!response.ok) throw new Error("Document could not be loaded");
-        return response.json() as Promise<{ document: DocumentInfo }>;
+        return response.json() as Promise<{ document: { id: string; name?: string | null } }>;
       })
       .then(({ document: loaded }) => {
         if (!cancelled) {
-          setDocument(loaded);
-          setTitleDraft(loaded.name);
+          const loadedDocument = {
+            ...loaded,
+            name: loaded.name || "Untitled Document",
+          };
+          setDocument(loadedDocument);
+          setTitleDraft(loadedDocument.name);
         }
       })
       .catch(() => setLoadError(true));
@@ -101,11 +105,11 @@ export function DocumentEditor({ documentId }: { documentId: string }) {
         body: JSON.stringify({ name: nextName }),
       });
       if (!response.ok) throw new Error("Could not save title");
-      const result = await response.json() as { document: DocumentInfo };
-      setDocument(result.document);
+      const result = await response.json() as { document: { id: string; name?: string | null } };
+      setDocument({ id: result.document.id, name: result.document.name || "Untitled Document" });
     } catch {
       setTitleError(true);
-      setTitleDraft(document.name);
+      setTitleDraft(document.name || "Untitled Document");
     } finally {
       setTitleSaving(false);
     }
