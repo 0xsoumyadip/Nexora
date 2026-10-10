@@ -5,14 +5,13 @@ import {
   FileText,
   Grid2X2,
   List,
-  MoreHorizontal,
   Search,
   Star,
   Trash2,
 } from "lucide-react";
 import { routes } from "@/lib/constants";
 import { useEffect, useState } from "react";
-import { getAllDocuments } from "@/lib/auth";
+import { deleteDocumentPermanently, getAllDocuments, starDocument, trashDocument } from "@/lib/auth";
 import { useSession } from "@nexora/auth/client"
 
 const copy = {
@@ -29,6 +28,8 @@ type DocumentProps = {
   title: string | null;
   author?: string | null;
   updated?: string | null;
+  trashed: boolean | null;
+  starred: boolean | null;
   people?: string[];
 };
 
@@ -95,8 +96,36 @@ export function DocumentBrowser({
     };
   }, []);
 
+  async function handleStarDocument(documentId: string) {
+    try {
+      await starDocument(documentId);
+      window.location.reload();
+    } catch (error) {
+      console.error("Starred document error: ", error);
+    }
+  }
+
+  async function handleTrashDocument(documentId: string) {
+    console.log("button clicked.")
+    try {
+      await trashDocument(documentId);
+      window.location.reload();
+    } catch (error) {
+      console.error("Trash document error: ", error);
+    }
+  }
+
+  async function handleDeleteDocument(documentId: string) {
+    try {
+      await deleteDocumentPermanently(documentId);
+      window.location.reload();
+    } catch (error) {
+      console.log("Delete document error: ", error);
+    }
+  }
+
   return (
-    <div className="app-content">
+    <div className={`app-content${scope === "trash" ? " trash-page" : ""}`}>
       <div className="page-title">
         <div>
           <h1>{dashboard ? `Good Morning, ${userName}` : title}</h1>
@@ -139,7 +168,11 @@ export function DocumentBrowser({
       )}
       {scope === "trash" && (
         <div className="trash-note">
-          <Trash2 size={16} /> Items in trash are deleted after 30 days.
+          <span className="trash-note-icon"><Trash2 size={17} /></span>
+          <span>
+            <strong>Items in trash</strong>
+            <small>Deleted items are permanently removed after 30 days.</small>
+          </span>
         </div>
       )}
       <div className="toolbar">
@@ -151,24 +184,19 @@ export function DocumentBrowser({
             placeholder="Search documents…"
           />
         </div>
-        <select
-          aria-label="Filter by owner"
-          className="select"
-          defaultValue="all"
-        >
+
+        <select aria-label="Filter by owner" className="select" defaultValue="all">
           <option value="all">Anyone</option>
-          <option>Owned by me</option>
-          <option>Not owned by me</option>
+          <option value="owned">Owned by me</option>
+          <option value="not-owned">Not owned by me</option>
         </select>
-        <select
-          aria-label="Sort documents"
-          className="select"
-          defaultValue="recent"
-        >
+
+        <select aria-label="Sort documents" className="select" defaultValue="recent">
           <option value="recent">Recently updated</option>
-          <option>Name A–Z</option>
-          <option>Newest created</option>
+          <option value="name">Name A–Z</option>
+          <option value="created">Newest created</option>
         </select>
+
         <div className="view-toggle">
           <button type="button" className="active" aria-label="Grid view">
             <Grid2X2 size={16} />
@@ -177,10 +205,17 @@ export function DocumentBrowser({
             <List size={16} />
           </button>
         </div>
+
+        {scope === "trash" && (
+          <button type="button" className="trash-button" aria-label="Trash">
+            <span className="trash-button-icon"><Trash2 size={16} /></span>
+            <span>Trash</span>
+          </button>
+        )}
       </div>
-      <div className="document-grid">
+      <div className={`document-grid${scope === "trash" ? " trash-document-grid" : ""}`}>
         {documents.map((doc) => (
-          <article className="doc-card" key={doc.id}>
+          <article className={`doc-card${scope === "trash" ? " trash-doc-card" : ""}`} key={doc.id}>
             <Link href={routes.document(doc.id)}>
               <span className="doc-icon">
                 <FileText size={18} />
@@ -198,16 +233,35 @@ export function DocumentBrowser({
               </div>
             </Link>
             <div className="doc-actions">
-              <button type="button" aria-label="Star document">
+              {doc.starred ? (
+              <button type="button" onClick={() => handleStarDocument(doc.id)} aria-label="Star document">
+                ⭐
+              </button>
+              ) : (
+              <button type="button" onClick={() => handleStarDocument(doc.id)} aria-label="Star document">
                 <Star size={17} />
               </button>
-              <button type="button" aria-label="More document options">
-                <MoreHorizontal size={17} />
+              )}
+              {doc.trashed ? (
+              <button type="button" onClick={() => handleDeleteDocument(doc.id)} aria-label="Delete document permanently">
+                <Trash2 size={17} />
               </button>
+              ) : (
+              <button type="button" onClick={() => handleTrashDocument(doc.id)} aria-label="Move document to trash">
+                <Trash2 size={17} />
+              </button>
+              )}
             </div>
           </article>
         ))}
       </div>
+      {scope === "trash" && documents.length === 0 && !documentsError && (
+        <div className="trash-empty">
+          <span className="trash-empty-icon"><Trash2 size={22} /></span>
+          <h2>Your trash is empty</h2>
+          <p>Documents you move to trash will appear here.</p>
+        </div>
+      )}
     </div>
   );
 }

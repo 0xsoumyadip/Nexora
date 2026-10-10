@@ -107,3 +107,21 @@ export async function openDocumet(documentId: string) {
     method: "PATCH"
   })
 }
+
+export async function trashDocument(documentId: string) {
+  return apiRequest<ApiRequest>(`/api/document/${documentId}/trash`, {
+    method: "PATCH"
+  })
+}
+
+export async function deleteDocumentPermanently(documentId: string) {
+  return apiRequest<ApiRequest>(`/api/document/${documentId}/delete`, {
+    method: "DELETE"
+  })
+}
+
+export async function starDocument(documentId: string) {
+  return apiRequest<ApiRequest>(`/api/document/${documentId}/star`, {
+    method: "PATCH"
+  })
+}
