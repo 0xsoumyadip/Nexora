@@ -13,6 +13,7 @@ import {
 import { routes } from "@/lib/constants";
 import { useEffect, useState } from "react";
 import { getAllDocuments } from "@/lib/auth";
+import { useSession } from "@nexora/auth/client"
 
 const copy = {
   all: ["My files", "All your documents, in one calm place."],
@@ -41,10 +42,12 @@ export function DocumentBrowser({
   userName?: string;
 }) {
 
+  const { data: session } = useSession();
   const [title, description] = copy[scope];
 
   const [documents, setDocuments] = useState<DocumentProps[]>([]);
   const [documentsError, setDocumentsError] = useState<string | null>(null);
+  const currentUserId = session?.user.id;
 
   useEffect(() => {
     let active = true;
@@ -52,8 +55,29 @@ export function DocumentBrowser({
     async function getDocuments() {
       try {
         const response = await getAllDocuments();
+
+        const activeDocuments = response.documents.filter((document) => !document.trashed);
+        const starredDocuments = response.documents.filter((document) => document.starred);
+        const trashedDocuments = response.documents.filter((document) => document.trashed);
+        const recentDocuments = response.documents.filter((document) => document.lastOpenedAt)
+          .sort((a, b) =>
+            new Date(b.lastOpenedAt!).getTime() -
+            new Date(a.lastOpenedAt!).getTime())
+          .slice(0, 20)
+        const sharedWithMe = response.documents.filter((document) => document.authorId !== currentUserId && document.members.length > 0);
+
         if (active) {
-          setDocuments(response.documents);
+          if (scope === "recent") {
+            setDocuments(recentDocuments);
+          } else if (scope === "starred") {
+            setDocuments(starredDocuments);
+          } else if (scope === "trash") {
+            setDocuments(trashedDocuments);
+          } else if (scope === "shared") {
+            setDocuments(sharedWithMe);
+          } else {
+            setDocuments(activeDocuments);
+          }
           setDocumentsError(null);
         }
       } catch (error) {

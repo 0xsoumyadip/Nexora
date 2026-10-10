@@ -3,6 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "./generated/prisma/client.js";
+export { Prisma } from "./generated/prisma/client.js";
 
 // Load the database package's .env regardless of the process working directory.
 const { parsed } = config({

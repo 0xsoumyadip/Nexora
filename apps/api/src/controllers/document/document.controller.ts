@@ -1,6 +1,7 @@
 import prisma from "@nexora/database";
 import type { Request, Response } from "express";
 import { getGoogleDriveClient } from "../../services/google_drive_client.service.ts";
+import type { Prisma } from "@nexora/database";
 
 export async function findAccessableDocments(
   documentId: string,
@@ -20,16 +21,44 @@ export async function findAccessableDocments(
   });
 }
 
-export async function findAllAccessableDocuments(userId: string) {
+type AccessibleDocument = Prisma.DocumentGetPayload<{
+  include: {
+    members: {
+      where: { userId: string };
+      select: { role: true };
+    };
+  };
+}>;
+
+export async function findAllAccessableDocuments(
+  userId: string,
+): Promise<AccessibleDocument[]> {
   return prisma.document.findMany({
     where: {
-      OR: [{ authorId: userId }, { lastEditedById: userId }],
+      OR: [
+        { authorId: userId },
+        { lastEditedById: userId },
+        {
+          members: {
+            some: {
+              userId,
+            },
+          },
+        },
+      ],
     },
-    select: {
-      id: true,
-      name: true,
-      title: true,
-      updatedAt: true,
+    include: {
+      members: {
+        where: {
+          userId,
+        },
+        select: {
+          role: true,
+        },
+      },
+    },
+    orderBy: {
+      updatedAt: "desc",
     },
   });
 }
@@ -131,19 +160,52 @@ export async function renameDocument(req: Request, res: Response) {
   }
 }
 
-export async function getAllDocuments(req: Request, res: Response){
+export async function getAllDocuments(req: Request, res: Response) {
   try {
     const documents = await findAllAccessableDocuments(req.auth.user.id);
 
     return res.status(200).json({
       success: true,
-      documents
+      documents,
     });
   } catch (error) {
     console.error("Get all documents error: ", error);
     return res.status(500).json({
       status: false,
-      message: "Internal server error"
-    })
+      message: "Internal server error",
+    });
+  }
+}
+
+export async function openDocumet(req: Request, res: Response) {
+  const documentId = req.params.documentId;
+  if (typeof documentId !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "A document id is required.",
+    });
+  }
+
+  try {
+    const updatedDocument = await prisma.document.update({
+      where: {
+        id: documentId,
+        authorId: req.auth.user.id,
+      },
+      data: {
+        lastOpenedAt: new Date(),
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      updatedDocument,
+    });
+  } catch (error) {
+    console.error("Document opening error: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
   }
 }

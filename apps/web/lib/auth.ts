@@ -82,7 +82,13 @@ type Document = {
   id: string;
   name: string;
   title: string | null;
+  authorId: string;
+  starred: boolean;
+  trashed: boolean;
+  trashedAt?: string | null;
+  lastOpenedAt?: string| null;
   updatedAt: string;
+  members: { role: "VIEWER" | "EDITOR" }[];
 };
 
 type GetAllDocumentsResponse = {
@@ -94,4 +100,10 @@ export async function getAllDocuments() {
   return apiRequest<GetAllDocumentsResponse>("/api/document", {
     method: "GET",
   });
+}
+
+export async function openDocumet(documentId: string) {
+  return apiRequest<GetAllDocumentsResponse>(`/api/document/${documentId}/open`,{
+    method: "PATCH"
+  })
 }
