@@ -35,3 +35,9 @@ export async function deleteGoogleDrivePermanently(userId: string, fileId: strin
         fileId
     });
 }
+
+export async function deleteAllGoogleDriveFilePermanently(userId: string): Promise<void> {
+    const drive = await getGoogleDriveClient(userId);
+
+    await drive.files.emptyTrash({});
+}

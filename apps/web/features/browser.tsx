@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 import { routes } from "@/lib/constants";
 import { useEffect, useState } from "react";
-import { deleteDocumentPermanently, getAllDocuments, starDocument, trashDocument } from "@/lib/auth";
-import { useSession } from "@nexora/auth/client"
+import { deleteAllDocumentPeremanently, deleteDocumentPermanently, getAllDocuments, starDocument, trashDocument } from "@/lib/auth";
+import { useSession } from "@nexora/auth/client";
+import { useRouter } from "next/navigation";
 
 const copy = {
   all: ["My files", "All your documents, in one calm place."],
@@ -45,7 +46,7 @@ export function DocumentBrowser({
 
   const { data: session } = useSession();
   const [title, description] = copy[scope];
-
+  const router = useRouter();
   const [documents, setDocuments] = useState<DocumentProps[]>([]);
   const [documentsError, setDocumentsError] = useState<string | null>(null);
   const currentUserId = session?.user.id;
@@ -99,7 +100,7 @@ export function DocumentBrowser({
   async function handleStarDocument(documentId: string) {
     try {
       await starDocument(documentId);
-      window.location.reload();
+      router.refresh();
     } catch (error) {
       console.error("Starred document error: ", error);
     }
@@ -121,6 +122,15 @@ export function DocumentBrowser({
       window.location.reload();
     } catch (error) {
       console.log("Delete document error: ", error);
+    }
+  }
+
+  async function handleDeleteAllDocuments() {
+    try {
+      await deleteAllDocumentPeremanently();
+      window.location.reload();
+    } catch (error) {
+      console.log("Delete all files error: ", error);
     }
   }
 
@@ -207,7 +217,7 @@ export function DocumentBrowser({
         </div>
 
         {scope === "trash" && (
-          <button type="button" className="trash-button" aria-label="Trash">
+          <button type="button" onClick={handleDeleteAllDocuments} className="trash-button" aria-label="Trash">
             <span className="trash-button-icon"><Trash2 size={16} /></span>
             <span>Trash</span>
           </button>

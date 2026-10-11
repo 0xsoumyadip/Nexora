@@ -64,13 +64,18 @@ export async function createDocument() {
     return response;
   } catch (error) {
     if (error instanceof ApiError) {
-      const errorBody = error.responseBody as CreateDocumentResponse | undefined;
+      const errorBody = error.responseBody as
+        CreateDocumentResponse | undefined;
       if (error.status === 403 && errorBody?.requireGoogleDriveConnection) {
         window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/google-drive/connect`;
         return;
       }
 
-      console.error("Create document request failed:", error.status, error.message);
+      console.error(
+        "Create document request failed:",
+        error.status,
+        error.message,
+      );
       return;
     }
 
@@ -86,7 +91,7 @@ type Document = {
   starred: boolean;
   trashed: boolean;
   trashedAt?: string | null;
-  lastOpenedAt?: string| null;
+  lastOpenedAt?: string | null;
   updatedAt: string;
   members: { role: "VIEWER" | "EDITOR" }[];
 };
@@ -103,25 +108,34 @@ export async function getAllDocuments() {
 }
 
 export async function openDocumet(documentId: string) {
-  return apiRequest<GetAllDocumentsResponse>(`/api/document/${documentId}/open`,{
-    method: "PATCH"
-  })
+  return apiRequest<GetAllDocumentsResponse>(
+    `/api/document/${documentId}/open`,
+    {
+      method: "PATCH",
+    },
+  );
 }
 
 export async function trashDocument(documentId: string) {
   return apiRequest<ApiRequest>(`/api/document/${documentId}/trash`, {
-    method: "PATCH"
-  })
+    method: "PATCH",
+  });
 }
 
 export async function deleteDocumentPermanently(documentId: string) {
   return apiRequest<ApiRequest>(`/api/document/${documentId}/delete`, {
-    method: "DELETE"
-  })
+    method: "DELETE",
+  });
 }
 
 export async function starDocument(documentId: string) {
   return apiRequest<ApiRequest>(`/api/document/${documentId}/star`, {
-    method: "PATCH"
-  })
+    method: "PATCH",
+  });
+}
+
+export async function deleteAllDocumentPeremanently() {
+  return apiRequest<ApiRequest>(`/api/document/delete`, {
+    method: "DELETE",
+  });
 }
