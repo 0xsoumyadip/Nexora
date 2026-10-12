@@ -34,7 +34,7 @@ model User {
   editedDocuments       Document[]             @relation("DocumentLastEditor")
   googleDriveConnection GoogleDriveConnection?
   googleOAuthState      GoogleOAuthState[]
-  documentMemberships    DocumentMember[]
+  documentMemberships   DocumentMember[]
 }
 
 model Session {
@@ -108,7 +108,7 @@ model Document {
   author       User  @relation("DocumentAuthor", fields: [authorId], references: [id])
   lastEditedBy User? @relation("DocumentLastEditor", fields: [lastEditedById], references: [id])
 
-  members       DocumentMember[]
+  members DocumentMember[]
 
   @@index([authorId, trashed])
   @@index([authorId, starred])
@@ -116,16 +116,20 @@ model Document {
 }
 
 model DocumentMember {
-  id     String     @id @default(uuid())
-  documentId    String
-  userId      String
-  role      DocumentRole    @default(VIEWER)
+  id         String       @id @default(uuid())
+  documentId String
+  userId     String
+  role       DocumentRole @default(VIEWER)
 
-  document    Document    @relation(fields: [documentId], references: [id], onDelete: Cascade)
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isLinkShareEnabled Boolean      @default(false)
+  linkShareRole      DocumentRole @default(VIEWER)
+  shareTokens        String?
 
-  @@index([userId])
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([documentId, userId])
+  @@index([userId])
 }
 
 model GoogleDriveConnection {

@@ -17,7 +17,7 @@ export async function connectGoogleDrive(req: Request, res: Response) {
     const authUrl = googleOAuth2Client.generateAuthUrl({
       access_type: "offline",
       prompt: "consent",
-      scope: ["https://www.googleapis.com/auth/drive.file"],
+      scope: ["https://www.googleapis.com/auth/drive"],
       state,
     });
     return res.redirect(authUrl);

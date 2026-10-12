@@ -2,6 +2,8 @@ import prisma from "@nexora/database";
 import type { Request, Response } from "express";
 import { getGoogleDriveClient } from "../../services/google_drive_client.service.ts";
 import { Prisma } from "@nexora/database";
+import { shareLinkSchema } from "@nexora/validation";
+import { randomBytes, createHash } from "node:crypto";
 
 export async function findAccessableDocments(
   documentId: string,
@@ -263,5 +265,75 @@ export async function starDocument(req: Request, res: Response) {
       success: false,
       message: "Internal server error",
     });
+  }
+}
+
+export async function shareDocumentLink (req: Request, res: Response) {
+  const documentId = req.params.documentId;
+  if(typeof documentId !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "A document id is required."
+    })
+  }
+
+  try {
+    const parsedData = shareLinkSchema.safeParse(req.body);
+
+    if(!parsedData.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Role must be VIEWER or EDITOR"
+      })
+    }
+
+    const { role } = parsedData.data;
+
+    const document = await prisma.document.findFirst({
+      where: {
+        id: documentId,
+        authorId: req.auth.user.id
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if(!document) {
+      return res.status(404).json({
+        success: false,
+        message: "Document not found."
+      })
+    }
+
+    const token = randomBytes(32).toString("hex");
+    const tokenHash = createHash("sha256")
+    .update(token)
+    .digest("hex")
+
+    await prisma.document.update({
+      where: {
+        id: document.id
+      },
+      data: {
+        isLinkShareEnabled: true,
+        shareTokens: tokenHash,
+        linkShareRole: role
+      }
+    });
+
+    const shareUrl = `${process.env.WEB_URL}/share/${token}`;
+
+    return res.status(200).json({
+      success: true,
+      shareUrl,
+      role
+    });
+  } catch (error) {
+    console.error("Share document link error: ", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error"
+    })
   }
 }

@@ -52,3 +52,7 @@ export const googleDriveCallbackSchema = z.object({
   code: z.string().min(1, "GDrive is code is required."),
   state: z.string().min(1, "GDrive state is required.")
 })
+
+export const shareLinkSchema = z.object({
+  role: z.enum(["VIEWER", "EDITOR"])
+});
