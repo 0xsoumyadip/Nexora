@@ -305,21 +305,33 @@ export async function shareDocumentLink (req: Request, res: Response) {
         message: "Document not found."
       })
     }
-
+    
+    const userId = req.auth.user.id;
     const token = randomBytes(32).toString("hex");
     const tokenHash = createHash("sha256")
     .update(token)
     .digest("hex")
 
-    await prisma.document.update({
+       await prisma.documentMember.upsert({
       where: {
-        id: document.id
+        documentId_userId: {
+          documentId,
+          userId,
+        },
       },
-      data: {
+      create: {
+        documentId,
+        userId,
+        role: "EDITOR",
         isLinkShareEnabled: true,
+        linkShareRole: role,
         shareTokens: tokenHash,
-        linkShareRole: role
-      }
+      },
+      update: {
+        isLinkShareEnabled: true,
+        linkShareRole: role,
+        shareTokens: tokenHash,
+      },
     });
 
     const shareUrl = `${process.env.WEB_URL}/share/${token}`;

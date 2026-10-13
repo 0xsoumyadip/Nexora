@@ -6,6 +6,7 @@ import {
   getDocument,
   openDocumet,
   renameDocument,
+  shareDocumentLink,
   starDocument,
 } from "../controllers/document/document.controller.ts";
 import {
@@ -23,6 +24,7 @@ router.patch("/:documentId", verifySession, renameDocument);
 router.patch("/:documentId/open", verifySession, openDocumet);
 router.patch("/:documentId/trash", verifySession, trashDocument);
 router.patch("/:documentId/star", verifySession, starDocument);
+router.post("/:documentId/share", verifySession, shareDocumentLink);
 router.delete("/:documentId/delete", verifySession, deleteDocumentPermanently);
 router.delete("/delete", verifySession, deleteAllDocumentsPermanently);
 
